@@ -1,6 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
 
+import sys
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-a49y3zb8%1pwp^g4sa)1)54xq3wm+n(xbx_8jzm5$bt@)inwb9'
@@ -133,3 +135,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+print("DEBUG:", DEBUG, file=sys.stderr)
+print("CORS_ALLOWED_ORIGINS:", CORS_ALLOWED_ORIGINS, file=sys.stderr)
