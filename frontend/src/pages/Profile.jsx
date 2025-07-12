@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
-import { clearUser } from "../features/authSlice";
+import { clearUser, logoutUser } from "../features/authSlice";
 
 export default function Profile() {
   const { user } = useSelector((state) => state.auth);
@@ -9,9 +8,14 @@ export default function Profile() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await axios.post("logout/", {}, { withCredentials: true });
-    dispatch(clearUser());
-    window.location.href = "/login";
+    try {
+      await dispatch(logoutUser()).unwrap();
+      await dispatch(clearUser());
+      navigate("/auth");
+      console.log("Logged out");
+    } catch (error) {
+      console.error(error || "Logout failed");
+    }
   };
 
   return (

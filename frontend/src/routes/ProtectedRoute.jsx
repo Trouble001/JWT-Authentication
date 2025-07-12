@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
     return <p>Checking session...</p>;
   }
 
-  if (!user) return <Navigate to="/login" />
+  if (!user) return <Navigate to="/auth" replace />
 
  return children;
 }

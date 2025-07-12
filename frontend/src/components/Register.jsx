@@ -1,36 +1,38 @@
 import React, { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import Input from "./Input";
 import Button from "./Button";
-import axios from "../api/axios";
-import { useNavigate } from "react-router-dom";
-
+import { registerUser } from "../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Register() {
   const [form, setForm] = useState({ username: "", email: "", full_name: "", password: "" });
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
-    e.preventDefault();
     const {name, value} = e.target;
     setForm((prevForm) => ({
       ...prevForm,
       [name]: value,
     }));
-    console.log(form);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await axios.post("register/", form);
-      navigate("/auth");
-    } catch {
-      alert("Registration failed");
+      await dispatch(registerUser(form)).unwrap();
+      navigate("/");
+      console.log("Registration Successful!");
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
-    <div>
-      <h4 className="text-xl text-center text-slate-800 font-medium mb-4">Create Account</h4>
+    <form onSubmit={handleSubmit} className="">
+      <h4 className="text-xl text-center text-slate-900 font-medium mb-4">Create new account</h4>
       <Input
         type="text"
         placeholder="Username"
@@ -38,6 +40,7 @@ export default function Register() {
         value={form.username}
         onChange={handleChange}
       />
+
       <Input
         type="email"
         placeholder="Email"
@@ -45,6 +48,7 @@ export default function Register() {
         value={form.email}
         onChange={handleChange}
       />
+
       <Input
         type="text"
         placeholder="Full Name"
@@ -52,6 +56,7 @@ export default function Register() {
         value={form.full_name}
         onChange={handleChange}
       />
+      
       <Input
         type="password"
         placeholder="Password"
@@ -59,7 +64,11 @@ export default function Register() {
         value={form.password}
         onChange={handleChange}
       />
-      <Button onClick={handleSubmit} name="Register" />
-    </div>
+      <Button
+        type="submit"
+        name={loading ? "Creating" : "Create"}
+        disabled={loading}
+      />
+    </form>
   );
 }

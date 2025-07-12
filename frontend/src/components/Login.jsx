@@ -1,40 +1,36 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import Input from "./Input";
 import Button from "./Button";
-import axios from "../api/axios";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { fetchUser } from "../features/authSlice";
-
+import { loginUser } from "../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { loading } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
-    e.preventDefault();
     const {name, value} = e.target;
     setForm((prevForm) => ({
       ...prevForm,
       [name]: value,
     }));
-    console.log(form);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await axios.post("login/", form);
-      // await dispatch(fetchUser());
-      navigate("/");
-    } catch {
-      alert("Login failed");
+      await dispatch(loginUser(form)).unwrap();
+      console.log("Logged in");
+    } catch (error) {
+      console.error(error);
     }
   };
 
   return (
-    <div>
-      <h4 className="text-xl text-center text-slate-800 font-medium mb-4">Login into your account</h4>
+    <form onSubmit={handleSubmit} className="">
+      <h4 className="text-xl text-center text-slate-900 font-medium mb-4">Login into your account</h4>
       <Input
         type="text"
         placeholder="Username"
@@ -50,7 +46,11 @@ export default function Login() {
         value={form.password}
         onChange={handleChange}
       />
-      <Button onClick={handleSubmit} name="Login" />
-    </div>
+      <Button
+        type="submit"
+        name={loading ? "Logging in..." : "Login"}
+        disabled={loading}
+      />
+    </form>
   );
 }
