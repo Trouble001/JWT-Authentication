@@ -40,8 +40,8 @@ def login_view(request):
     user = authenticate(username=username, password=password)
     refresh = RefreshToken.for_user(user)
     response = Response({'message': 'Logged in'})
-    response.set_cookie('access', str(refresh.access_token), httponly=True, max_age=900)
-    response.set_cookie('refresh', str(refresh), httponly=True, max_age=604800)
+    response.set_cookie('access', str(refresh.access_token), httponly=True, secure=True, max_age=900)
+    response.set_cookie('refresh', str(refresh), httponly=True, secure=True, max_age=604800)
     return response
 
 @api_view(['POST'])
