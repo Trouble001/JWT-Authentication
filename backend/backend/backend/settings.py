@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-a49y3zb8%1pwp^g4sa)1)54xq3wm+n(xbx_8jzm5$bt@)inwb9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", 'jwt-authentication-z3m0.onrender.com']
+ALLOWED_HOSTS = [
+  'localhost',
+  '127.0.0.1',
+  'jwt-authentication-z3m0.onrender.com'
+]
 
 
 # Application definition
@@ -56,9 +60,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://your-vercel-app.vercel.app",
-    'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app/'
+    'http://localhost:5173',
+    'https://your-vercel-app.vercel.app',
+    'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -83,7 +87,12 @@ SIMPLE_JWT = {
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "https://your-vercel-app.vercel.app"]
+CSRF_TRUSTED_ORIGINS = [
+  'http://localhost:5173',
+  'https://your-vercel-app.vercel.app',
+  'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app'
+
+]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
