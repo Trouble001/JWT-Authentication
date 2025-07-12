@@ -62,7 +62,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'https://your-vercel-app.vercel.app',
-    'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app'
+    'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app',
+    'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app/'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -90,7 +91,8 @@ CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 CSRF_TRUSTED_ORIGINS = [
   'http://localhost:5173',
   'https://your-vercel-app.vercel.app',
-  'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app'
+  'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app',
+  'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app/'
 
 ]
 
