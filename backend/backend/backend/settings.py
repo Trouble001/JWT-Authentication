@@ -57,6 +57,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://your-vercel-app.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -81,11 +82,15 @@ SIMPLE_JWT = {
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "https://your-vercel-app.vercel.app"]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 ROOT_URLCONF = 'backend.urls'
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 TEMPLATES = [
     {

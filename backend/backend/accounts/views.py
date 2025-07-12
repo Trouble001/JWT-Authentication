@@ -70,7 +70,7 @@ def refresh_token_view(request):
             value=access_token,
             httponly=True,
             samesite='Lax',
-            secure=False,
+            secure=True,
             max_age=900,
         )
         return response
