@@ -83,7 +83,7 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_REFRESH": "refresh",
     "AUTH_COOKIE_HTTP_ONLY": True,
     "AUTH_COOKIE_SAMESITE": "Lax",
-    "AUTH_COOKIE_SECURE": False,  # Set to True in production
+    "AUTH_COOKIE_SECURE": True,  # Set to True in production
 }
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
