@@ -9,7 +9,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'jwt-authentication-z3m0.onrender.com',
+    'https://jwt-authentication-5f0y.onrender.com/',
 ]
 
 # Application definition
@@ -91,14 +91,14 @@ SIMPLE_JWT = {
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app',
+    'https://jwt-authentication-icfeehzg2-trouble001s-projects.vercel.app',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
-    'https://jwt-authentication-1fgl1jksx-trouble001s-projects.vercel.app',
+    'https://jwt-authentication-icfeehzg2-trouble001s-projects.vercel.app',
 ]
 
 # Security
