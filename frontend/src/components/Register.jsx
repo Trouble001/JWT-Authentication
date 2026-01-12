@@ -32,7 +32,7 @@ export default function Register() {
 
   return (
     <form onSubmit={handleSubmit} className="">
-      <h4 className="text-xl text-center text-slate-900 font-medium mb-4">Create new account</h4>
+      <h4 className="text-3xl text-center text-rose-600 font-bold mb-6">Create an account</h4>
       <Input
         type="text"
         placeholder="Username"
@@ -66,7 +66,7 @@ export default function Register() {
       />
       <Button
         type="submit"
-        name={loading ? "Creating" : "Create"}
+        name={loading ? "Creating..." : "Create"}
         disabled={loading}
       />
     </form>

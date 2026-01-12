@@ -20,9 +20,9 @@ export default function ResetSuccess() {
   if (user) return <Navigate to="/" replace />;
 
   return (
-    <div className="w-full h-screen bg-slate-950 flex flex-col items-center justify-center">
-      <h4 className="text-3xl text-slate-300">Your password has been successfully reset!</h4>
-      <h4 className="text-lg text-slate-400">wait a moment while we redirecting you to the login...</h4>
+    <div className="w-full h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center">
+      <h4 className="text-3xl text-slate-300 dark:text-slate-200">Your password has been successfully reset!</h4>
+      <h4 className="text-lg text-slate-400 dark:text-slate-300">wait a moment while we redirecting you to the login...</h4>
     </div>
   );
 }

@@ -28,8 +28,8 @@ export default function ForgotPassword() {
 
   return (
     <div className="w-full h-screen flex items-center justify-center">
-      <div className="outline outline-slate-300 px-10 py-8 rounded-md shadow-md">
-        <h2 className="text-lg text-center text-slate-900 mb-4">Forgot Password</h2>
+      <div className="border border-slate-300 dark:border-slate-800 px-10 py-8 rounded-md">
+        <h2 className="text-lg font-medium text-center text-slate-900 dark:text-slate-200 mb-4">Forgot Password</h2>
           <form onSubmit={handleSubmit}>
           <Input
             type="email"

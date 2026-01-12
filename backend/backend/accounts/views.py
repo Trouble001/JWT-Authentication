@@ -1,10 +1,12 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from django.contrib.auth import authenticate, get_user_model
 from .serializers import CustomUserSerializer, RegisterSerializer
 from django.core.mail import send_mail
-from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
@@ -14,6 +16,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.utils.html import format_html
 
 User = get_user_model()
+
 
 @api_view(['POST'])
 def register(request):
@@ -25,41 +28,48 @@ def register(request):
         return Response({'message': 'User registered'}, status=201)
     return Response(serializer.errors, status=400)
 
+
 @api_view(['POST'])
 def login_view(request):
     username = request.data.get('username')
     password = request.data.get('password')
-    
+
     user = User.objects.filter(username=username).first()
     if not user:
         return Response({'error': 'Username not found'}, status=400)
-    
+
     if not user.check_password(password):
         return Response({'error': 'Incorrect password'}, status=400)
 
     user = authenticate(username=username, password=password)
     refresh = RefreshToken.for_user(user)
     response = Response({'message': 'Logged in'})
-    response.set_cookie('access', str(refresh.access_token), httponly=True, secure=True, max_age=900)
-    response.set_cookie('refresh', str(refresh), httponly=True, secure=True, max_age=604800)
+    response.set_cookie('access', str(refresh.access_token),
+                        httponly=True, secure=True, max_age=900)
+    response.set_cookie('refresh', str(refresh),
+                        httponly=True, secure=True, max_age=604800)
     return response
 
+
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def logout_view(request):
     response = Response({'message': 'Logged out'})
     response.delete_cookie('access')
     response.delete_cookie('refresh')
     return response
 
+
 @api_view(['POST'])
 def refresh_token_view(request):
     refresh_token = request.COOKIES.get('refresh')
     if not refresh_token:
-        response = Response({'error': 'Session end. Please reauthenticate'}, status=401)
+        response = Response(
+            {'error': 'Session end. Please reauthenticate'}, status=401)
         response.delete_cookie('access')
         response.delete_cookie('refresh')
         return response
-    
+
     try:
         refresh = RefreshToken(refresh_token)
         access_token = str(refresh.access_token)
@@ -83,7 +93,15 @@ def refresh_token_view(request):
         return response
 
 
-@api_view(['GET'])
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+
+@api_view(['GET', 'PATCH'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def user_view(request):
     token = request.COOKIES.get('access')
     if not token:
@@ -91,9 +109,20 @@ def user_view(request):
     try:
         u = AccessToken(token)['user_id']
         user = User.objects.get(id=u)
-        return Response(CustomUserSerializer(user).data)
     except:
         return Response({'error': 'Invalid token'}, status=401)
+
+    if request.method == 'GET':
+        return Response(CustomUserSerializer(user).data)
+
+    if request.method == 'PATCH':
+        serializer = CustomUserSerializer(
+            user, data=request.data, partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
 
 
 @api_view(['POST'])
@@ -102,7 +131,7 @@ def forgot_password(request):
     user = User.objects.filter(email=email).first()
 
     if not user:
-        return Response({ 'error': 'No user found with that email' }, status=400)
+        return Response({'error': 'No user found with that email'}, status=400)
 
     if user:
         token = account_token.make_token(user)

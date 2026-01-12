@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('register/', views.register),
@@ -10,3 +11,8 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password),
     path('reset-password/', views.reset_password),
 ]
+
+router = DefaultRouter()
+router.register(r'users', views.UserViewSet, basename='user')
+
+urlpatterns += router.urls

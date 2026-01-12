@@ -4,12 +4,13 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-a49y3zb8%1pwp^g4sa)1)54xq3wm+n(xbx_8jzm5$bt@)inwb9'
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'https://jwt-authentication-5f0y.onrender.com/',
+    'localhost:8000',
+    'https://jwt-authentication-5f0y.onrender.com',
 ]
 
 # Application definition
@@ -24,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'accounts',
+    'quiz'
 ]
 
 MIDDLEWARE = [
@@ -59,8 +61,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'quizer',
+        'USER': 'postgres',
+        'PASSWORD': 'electrogs001',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -70,7 +76,8 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # JWT authentication
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # update the import path if needed
+        'accounts.authentication.JWTAuthenticationFromCookie',
     )
 }
 
@@ -84,7 +91,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_REFRESH': 'refresh',
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_SAMESITE': 'Lax',
-    'AUTH_COOKIE_SECURE': True,
+    'AUTH_COOKIE_SECURE': False,
 }
 
 # ✅ CORS SETTINGS
@@ -102,12 +109,16 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # Security
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = 'Lax'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Static files
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Email (for console output)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

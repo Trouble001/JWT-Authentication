@@ -1,31 +1,38 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../api/axios";
+import axios from "axios";
+import axiosInstance from "../api/axios";
 
 
 // Login User
 export const loginUser = createAsyncThunk("auth/login", async (data, thunkAPI) => {
   try {
-    const res = await axios.post("login/", data, { withCredentials: true });
+    const res = await axios.post("http://localhost:8000/accounts/login/", data, { withCredentials: true });
     thunkAPI.dispatch(fetchUser());
     return res.data.message || "Login Successful!";
   } catch (err) {
-      const errorData = err.response?.data;
-      let message = "Login failed. Please try again.";
-      if (errorData?.error) {
-        message = errorData.error;
-      } else if (typeof errorData === "string") {
-        message = errorData;
-      }
-      return thunkAPI.rejectWithValue(message);
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
+    const errorData = err.response?.data;
+    let message = "Login failed. Please try again.";
+    if (errorData?.error) {
+      message = errorData.error;
+    } else if (typeof errorData === "string") {
+      message = errorData;
+    }
+    return thunkAPI.rejectWithValue(message);
   }
 });
 
 // Register User
 export const registerUser = createAsyncThunk("auth/register", async (data, thunkAPI) => {
   try {
-    const res = await axios.post("register/", data);
+    const res = await axios.post("http://localhost:8000/accounts/register/", data);
     return res.data.message || "Registration Successfully!";
   } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
     const errorData = err.response?.data;
     let message = "Registration failed.";
     if (typeof errorData === "object") {
@@ -39,28 +46,132 @@ export const registerUser = createAsyncThunk("auth/register", async (data, thunk
 // Fetch User
 export const fetchUser = createAsyncThunk("auth/fetchUser", async (_, thunkAPI) => {
   try {
-    const res = await axios.get("user/", { withCredentials: true });
+    const res = await axiosInstance.get("accounts/user/", { withCredentials: true });
     return res.data;
   } catch (err) {
-    if (err.response?.status === 401) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    } else if (err.response?.status === 401) {
       try {
-        await axios.post("refresh/", {}, { withCredentials: true });
-        const retry = await axios.get("user/", { withCredentials: true });
+        await axiosInstance.post("accounts/refresh/", {}, { withCredentials: true });
+        const retry = await axiosInstance.get("accounts/user/", { withCredentials: true });
         return retry.data;
       } catch (refreshErr) {
         return thunkAPI.rejectWithValue(refreshErr.response?.data?.error || "Login Required");
       }
     }
-    return thunkAPI.rejectWithValue("Fetch failed");
+    return thunkAPI.rejectWithValue("Server error");
+  }
+});
+
+export const updateProfile = createAsyncThunk("auth/updateProfile", async (formData, thunkAPI) => {
+  try {
+    const res = await axiosInstance.patch("accounts/user/", formData, { 
+      withCredentials: true,
+      headers: { 
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    return res.data;
+  } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
+    const errorData = err.response?.data;
+    let message;
+    if (typeof errorData === "object") {
+      const field = Object.keys(errorData)[0];
+      message = errorData[field];
+    }
+    return thunkAPI.rejectWithValue(message);
+  }
+})
+
+// Fetch All Users Admin
+export const fetchAllUsers = createAsyncThunk("auth/fetchAllUsers", async (_, thunkAPI) => {
+  try {
+    const res = await axiosInstance.get("/accounts/users/");
+    return res.data;
+  } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
+    const errorData = err.response?.data;
+    let message;
+    if (typeof errorData === "object") {
+      const field = Object.keys(errorData)[0];
+      message = errorData[field];
+    }
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+// Fetch Single User Details Admin
+export const fetchUserDetail = createAsyncThunk("auth/fetchUserDetail", async (id, thunkAPI) => {
+  try {
+    const res = await axiosInstance.get(`/accounts/users/${id}`);
+    return res.data;
+  } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
+    const errorData = err.response?.data;
+    let message;
+    if (typeof errorData === "object") {
+      const field = Object.keys(errorData)[0];
+      message = errorData[field];
+    }
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+// Update User Admin
+export const updateUser = createAsyncThunk("auth/updateUser", async ({id, userData}, thunkAPI) => {
+  try {
+    const res = await axiosInstance.put(`/accounts/users/${id}/`, userData);
+    return res.data;
+  } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
+    const errorData = err.response?.data;
+    let message;
+    if (typeof errorData === "object") {
+      const field = Object.keys(errorData)[0];
+      message = errorData[field];
+    }
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+// Delete User
+export const deleteUser = createAsyncThunk('auth/deleteUser', async (id, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(`/accounts/users/${id}/`);
+    return response.data;
+  } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
+    const errorData = err.response?.data;
+    let message;
+    if (typeof errorData === "object") {
+      const field = Object.keys(errorData)[0];
+      message = errorData[field];
+    }
+    return thunkAPI.rejectWithValue(message);
   }
 });
 
 // Logout User
 export const logoutUser = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
-    const res = await axios.post("logout/", {}, { withCredentials: true });
+    const res = await axios.post("http://localhost:8000/accounts/logout/", {}, { withCredentials: true });
     return res.data.message || "Logged out";
   } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
     return thunkAPI.rejectWithValue(err.response?.data?.error || "Logout failed");
   }
 });
@@ -69,9 +180,12 @@ export const logoutUser = createAsyncThunk("auth/logout", async (_, thunkAPI) =>
 // Forgot Password
 export const forgotPassword = createAsyncThunk("auth/forgot", async (email, thunkAPI) => {
   try {
-    const res = await axios.post("forgot-password/", {email});
+    const res = await axios.post("http://localhost:8000/accounts/forgot-password/", {email});
     return res.data.message || "Reset link sent to your email!";
   } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
     return thunkAPI.rejectWithValue(err.response?.data?.error || "Failed to sent reset link")
   }
 });
@@ -79,9 +193,12 @@ export const forgotPassword = createAsyncThunk("auth/forgot", async (email, thun
 // Reset Password
 export const resetPassword = createAsyncThunk("auth/reset", async ({uid, token, password}, thunkAPI) => {
   try {
-    const res = await axios.post("reset-password/", {uid, token, password});
+    const res = await axios.post("http://localhost:8000/accounts/reset-password/", {uid, token, password});
     return res.data.message || "Password reset successful!";
   } catch (err) {
+    if (!err.response) {
+      return thunkAPI.rejectWithValue("No internet connection");
+    }
     return thunkAPI.rejectWithValue(err.response?.data?.error || "Password reset failed");
   }
 });
@@ -91,6 +208,8 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
+    userDetail: null,
+    users: [],
     loading: false,
     message: null,
     error: null,
@@ -103,7 +222,7 @@ const authSlice = createSlice({
       state.message = null;
       state.error = null;
     },
-    clearMessage: (state) => {
+    clearAuthMessages: (state) => {
       state.message = null;
       state.error = null;
     }
@@ -166,6 +285,79 @@ const authSlice = createSlice({
         state.message = null;
       })
 
+      // Update Profile
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.message = action.payload.message || "Profile Updated";
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch All Users
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch User Detail
+      .addCase(fetchUserDetail.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUserDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userDetail = action.payload;
+      })
+      .addCase(fetchUserDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Update User Detail
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message || "User Updated";
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Delete User
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message || "User Deleted";
+        
+        const deletedUserId = action.meta.arg;
+        if (state.users) {
+          state.users = state.users.filter((u) => u.id !== deletedUserId);
+        }
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       // Logout
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
@@ -220,5 +412,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearUser, clearMessage } = authSlice.actions;
+export const { clearUser, clearAuthMessages } = authSlice.actions;
 export default authSlice.reducer;
