@@ -11,8 +11,6 @@ import Navbar from "./components/Navbar";
 import Authentication from "./components/Authentication";
 import Toast from "./components/Toast";
 import QuizAttempt from "./pages/QuizAttempt";
-import Categories from "./pages/Categories";
-import { fetchCategories } from "./features/categorySlice";
 const Home = lazy(() => import("./pages/Home"));
 const Profile = lazy(() => import("./pages/Profile"));
 const ResetSuccess = lazy(() => import("./pages/ResetSuccess"));
@@ -41,7 +39,7 @@ export default function App() {
       <Authentication />
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-          <Route path="/" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/add-subject" element={<ProtectedRoute><AddSubject /></ProtectedRoute>} />
           <Route path="/add-question" element={<ProtectedRoute><AddQuestion /></ProtectedRoute>} />
           <Route path="/subjects/edit/:id" element={<ProtectedRoute><EditSubject /></ProtectedRoute>} />

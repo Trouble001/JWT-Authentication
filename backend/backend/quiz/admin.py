@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Quiz, Question, Option, Attempt, UserAnswer
+from .models import Quiz, Question, Option, Attempt, UserAnswer
 
 
 class QuizInline(admin.TabularInline):
@@ -17,15 +17,9 @@ class QuestionInline(admin.TabularInline):
     extra = 1
 
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    inlines = [QuizInline]
-    list_display = ('id', 'title')
-
-
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ('category', 'title', 'created_by', 'created_at')
+    list_display = ('title', 'created_by', 'created_at')
     inlines = [QuestionInline]
     search_fields = ('title', 'description')
     list_filter = ('created_at',)

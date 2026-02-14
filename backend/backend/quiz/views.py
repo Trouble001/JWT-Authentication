@@ -2,15 +2,9 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
-from .models import Category, Quiz, Attempt, Question
-from .serializers import CategorySerializer, QuizSerializer, AttemptSerializer, QuestionCreateSerializer, QuestionSerializer
+from .models import Quiz, Attempt, Question
+from .serializers import QuizSerializer, AttemptSerializer, QuestionCreateSerializer, QuestionSerializer
 from django.shortcuts import get_object_or_404
-
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 @api_view(['GET'])

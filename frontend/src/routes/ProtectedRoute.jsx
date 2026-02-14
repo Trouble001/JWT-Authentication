@@ -18,7 +18,7 @@ export default function ProtectedRoute({ children }) {
   <div className="w-full min-h-screen relative bg-slate-50 dark:bg-slate-900">
     <Sidebar />
     {loading && <Loader />}
-    <div className={`w-full lg:w-10/12 h-full top-0 right-0 absolute pt-16 md:pt-18 lg:pt-20 xl:pt-20 pb-8 px-2 md:px-4 lg:px-6 xl:px-8`}>
+    <div className={`w-full lg:w-9/12 h-full top-0 right-0 absolute pt-16 md:pt-18 lg:pt-20 xl:pt-20 pb-8 px-2 md:px-4 lg:px-6 xl:px-8`}>
       {children}
     </div>
   </div>

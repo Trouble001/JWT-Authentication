@@ -2,11 +2,11 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
-router = DefaultRouter()
-router.register(r'categories', views.CategoryViewSet, basename='category')
+# router = DefaultRouter()
+# router.register(r'quizzes', views.QuizDetailAPIView, basename='quiz')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', views.quiz_list),
 
     path('add_subject/', views.add_subject),
     path('add_question/', views.add_question),

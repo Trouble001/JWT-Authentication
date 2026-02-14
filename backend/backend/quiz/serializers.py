@@ -43,28 +43,13 @@ class QuestionSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    quizzes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = Category
-        fields = ['id', 'title', 'description', 'quizzes']
-        read_only_fields = ['id', 'quizzes', 'created_by']
-
 
 class QuizSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
-    category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(),
-        source="category",
-        write_only=True
-    )
     questions = QuestionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Quiz
-        fields = ['id', 'title', 'description',
-                  'category', 'category_id' 'questions']
+        fields = ['id', 'title', 'description', 'questions']
         read_only_fields = ['id', 'questions', 'created_by']
 
 

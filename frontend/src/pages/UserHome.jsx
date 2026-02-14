@@ -1,6 +1,12 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function UserHome({ quizzes }) {
+
+  useEffect(() => {
+    console.log(quizzes)
+  }, []);
+
   return (
     <div className="w-full h-auto grid grid-cols-1 md:grid-cols-2 gap-4">
       {quizzes.map((quiz) => (
