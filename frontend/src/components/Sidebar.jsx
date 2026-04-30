@@ -11,25 +11,17 @@ const links = [
     border: "lg:border-t",
     roles: ["user", "admin"],
   },
+
+  // {
+  //   id: 2,
+  //   url: "/add-question",
+  //   name: "Add Question",
+  //   icon: HiPlusCircle,
+  //   border: "lg:border-t",
+  //   roles: ["admin"],
+  // },
   {
     id: 2,
-    url: "/add-subject",
-    name: "Add Subject",
-    icon: HiPlusCircle,
-    border: "lg:border-t",
-    roles: ["admin"],
-
-  },
-  {
-    id: 3,
-    url: "/add-question",
-    name: "Add Question",
-    icon: HiPlusCircle,
-    border: "lg:border-t",
-    roles: ["admin"],
-  },
-  {
-    id: 4,
     url: "/users",
     name: "All Users",
     icon: HiUserGroup,
@@ -37,7 +29,7 @@ const links = [
     roles: ["admin"],
   },
   {
-    id: 5,
+    id: 3,
     url: "/profile",
     name: "Profile",
     icon: HiUserCircle,
@@ -46,7 +38,7 @@ const links = [
     roles: ["user", "admin"],
   },
   {
-    id: 6,
+    id: 4,
     url: "/settings",
     name: "Settings",
     icon: HiCog6Tooth,
@@ -61,7 +53,7 @@ export default function Sidebar() {
   const role = user?.is_staff || user?.is_superuser ? "admin" : "user";
 
   return (
-    <div className={`w-full lg:w-3/12 h-12 lg:h-screen border-t lg:border-t-0 dark:bg-slate-950 bottom-0 lg:top-0 lg:left-0 z-40 flex items-center fixed lg:border-r overflow-hidden border-slate-200 dark:border-slate-700 shadow-md`}>
+    <div className={`w-full lg:w-2/12 h-12 lg:h-screen border-t lg:border-t-0 dark:bg-slate-950 bottom-0 lg:top-0 lg:left-0 z-40 flex items-center fixed lg:border-r overflow-hidden border-slate-200 dark:border-slate-700 shadow-md`}>
       <ul className="w-full flex lg:block h-full lg:h-auto px-4 lg:px-0 items-center justify-between text-slate-900 dark:text-slate-100">
         {links
         .filter((link) => link.roles.includes(role))

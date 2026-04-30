@@ -41,7 +41,7 @@ export default function App() {
           <Routes>
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/add-subject" element={<ProtectedRoute><AddSubject /></ProtectedRoute>} />
-          <Route path="/add-question" element={<ProtectedRoute><AddQuestion /></ProtectedRoute>} />
+          <Route path="/add-question/:quizId" element={<ProtectedRoute><AddQuestion /></ProtectedRoute>} />
           <Route path="/subjects/edit/:id" element={<ProtectedRoute><EditSubject /></ProtectedRoute>} />
           <Route path="/questions/edit/:id" element={<ProtectedRoute><EditQuestion /></ProtectedRoute>} />
           <Route path="/users/edit/:id" element={<ProtectedRoute><UpdateUser /></ProtectedRoute>} />

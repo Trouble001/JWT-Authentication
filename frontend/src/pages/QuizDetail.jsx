@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { deleteQuestion, fetchQuizDetail } from "../features/quizSlice";
 import { HiTrash, HiPencilSquare } from "react-icons/hi2";
+import PageButton from "../components/PageButton";
 
 export default function QuizDetail() {
   const { quizId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { selectedQuiz, loading } = useSelector((state) => state.quiz);
 
   useEffect(() => {
@@ -19,10 +21,18 @@ export default function QuizDetail() {
     }
   }
 
+  const handleClick = () => {
+    navigate(`/add-question/${quizId}`);
+  }
+
   if (loading) return <p>Loading...</p>
 
   return (
-    <table className="border-collapse w-full text-left text-xs md:text-sm lg:text-base xl:text-md table-auto border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-950">
+    <div>
+      <div className="w-full mb-2 flex items-center justify-end-safe">
+        <PageButton name={"+ Add Question"} onClick={handleClick} />
+      </div>
+      <table className="border-collapse w-full text-left text-xs md:text-sm lg:text-base xl:text-md table-auto border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-950">
       <thead className="">
         <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-300">
           <th className="px-2 py-1 border-r border-slate-200 dark:border-slate-700">S.N.</th>
@@ -55,5 +65,7 @@ export default function QuizDetail() {
       ))}
       </tbody>
     </table>
+    </div>
+    
   );
 }

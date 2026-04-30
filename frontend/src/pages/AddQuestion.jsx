@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addQuestion, fetchQuizzes } from "../features/quizSlice";
 import Input from "../components/Input";
@@ -8,8 +9,9 @@ import AccessDenied from "../components/AccessDenied";
 export default function AddQuestion() {
   const dispatch = useDispatch();
   const { loading, quizzes } = useSelector((state) => state.quiz);
+  const { quizId } = useParams();
   const { user } = useSelector((state) => state.auth);
-  const [selectedQuizId, setSelectedQuizId] = useState("");
+  const [selectedQuizId, setSelectedQuizId] = useState(quizId || "");
   const [questionText, setQuestionText] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [correctOptionIndex, setCorrectOptionIndex] = useState(null);
@@ -17,6 +19,12 @@ export default function AddQuestion() {
   useEffect(() => {
     dispatch(fetchQuizzes());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (quizId) {
+      setSelectedQuizId(quizId);
+    }
+}, [quizId]);
 
   const handleOptionChange = (index, value) => {
     const updatedOptions = [...options];
@@ -54,6 +62,7 @@ export default function AddQuestion() {
       <form onSubmit={handleSubmit} className="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-6/12 mx-auto">
         <select
           value={selectedQuizId}
+          disabled
           onChange={(e) => setSelectedQuizId(e.target.value)}
           className="bg-white dark:bg-slate-950 w-full px-4 py-2.5 text-slate-700 dark:text-slate-300 font-medium border border-slate-200 dark:border-slate-800 outline-none mb-3 rounded-md"
         >

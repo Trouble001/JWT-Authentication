@@ -61,9 +61,14 @@ export default function EditQuestion() {
       options: updatedOptions,
     };
 
-    console.log("Sending payload:", updatedData);
-    dispatch(updateQuestion({ id, updatedData }));
-    navigate("/");
+    try {
+      console.log("Sending payload:", updatedData);
+      dispatch(updateQuestion({ id, updatedData })).unwrap();  
+      navigate(`/quiz/${questionDetail.quiz}`);
+    } catch (error) {
+      console.error(error);
+    }
+
   }
 
   if (!user?.is_superuser) return <AccessDenied />

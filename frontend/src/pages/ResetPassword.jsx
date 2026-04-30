@@ -5,9 +5,12 @@ import { resetPassword } from "../features/authSlice";
 import { Navigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { HiEye, HiEyeSlash } from "react-icons/hi2";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  
   const { uid, token } = useParams();
   const navigate = useNavigate();
   const { user, loading } = useSelector((state) => state.auth);
@@ -25,6 +28,10 @@ export default function ResetPassword() {
     }
   };
 
+  const handleToggle = () => {
+    setShowPassword((prevState) => !prevState);
+  }
+
   if (user) return <Navigate to="/" replace />;
 
   return (
@@ -33,12 +40,25 @@ export default function ResetPassword() {
         <h2 className="text-lg font-medium text-center text-slate-900 dark:text-slate-200 mb-4">Reset Password</h2>
           <form onSubmit={handleSubmit}>
           <Input
-            type="password"
+            type={showPassword ? "text" : "password"}
             required
             placeholder="Enter new password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <button type="button" className="-ml-8 mt-3 absolute">
+            {showPassword ? (
+              <HiEyeSlash
+              className="text-xl text-slate-800 dark:text-slate-100"
+              onClick={handleToggle}
+            />
+            ) : (
+              <HiEye
+              className="text-xl text-slate-800 dark:text-slate-100"
+              onClick={handleToggle}
+            />
+            )}
+          </button>
           <Button
             type="submit"
             disabled={loading}

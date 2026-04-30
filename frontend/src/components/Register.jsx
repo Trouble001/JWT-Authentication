@@ -4,13 +4,16 @@ import Input from "./Input";
 import Button from "./Button";
 import { registerUser } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { HiEye, HiEyeSlash } from "react-icons/hi2";
 
 export default function Register() {
   const [form, setForm] = useState({ username: "", email: "", full_name: "", password: "" });
+  const [checkPass, setCheckPass] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
-
+  const [showPassword, setShowPassword] = useState(false);
+  
   const handleChange = (e) => {
     const {name, value} = e.target;
     setForm((prevForm) => ({
@@ -21,14 +24,22 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await dispatch(registerUser(form)).unwrap();
-      navigate("/");
-      console.log("Registration Successful!");
-    } catch (error) {
-      console.log(error);
+    if (form.password !== checkPass) {
+      alert("Password do not match!");
+    } else {
+        try {
+          await dispatch(registerUser(form)).unwrap();
+          navigate("/");
+          console.log("Registration Successful!");
+        } catch (error) {
+          console.log(error);
+        }
     }
   };
+
+  const handleToggle = () => {
+    setShowPassword((prevState) => !prevState);
+  }
 
   return (
     <form onSubmit={handleSubmit} className="">
@@ -56,14 +67,35 @@ export default function Register() {
         value={form.full_name}
         onChange={handleChange}
       />
-      
+
       <Input
-        type="password"
+        type={showPassword ? "text" : "password"}
         placeholder="Password"
         name="password"
         value={form.password}
         onChange={handleChange}
       />
+
+      <Input
+        type={showPassword ? "text" : "password"}
+        placeholder="Confirm Password"
+        name="password2"
+        value={checkPass}
+        onChange={(e) => setCheckPass(e.target.value)}
+      />
+      <button type="button" className="-ml-8 mt-3 absolute">
+        {showPassword ? (
+          <HiEyeSlash
+          className="text-xl text-slate-800 dark:text-slate-100"
+          onClick={handleToggle}
+        />
+        ) : (
+          <HiEye
+          className="text-xl text-slate-800 dark:text-slate-100"
+          onClick={handleToggle}
+        />
+        )}
+      </button>
       <Button
         type="submit"
         name={loading ? "Creating..." : "Create"}
