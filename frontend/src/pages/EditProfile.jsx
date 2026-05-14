@@ -59,7 +59,7 @@ export default function EditProfile() {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-11/12 mx-auto bg-slate-950">
+      <form onSubmit={handleSubmit} className="w-11/12 mx-auto p-4">
         <div className="w-full flex items-center justify-center flex-col mb-12">
           {userData.avatar ? (
             <Avatar src={preview ? `${preview}` : `http://localhost:8000${userData.avatar}`} alt={userData.full_name} />

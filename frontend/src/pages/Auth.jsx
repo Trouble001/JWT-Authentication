@@ -18,7 +18,7 @@ export default function Auth() {
   return (
     <div className="w-full h-screen md:grid grid-cols-2 z-50 absolute">
       <div className="flex items-center justify-center bg-rose-600">
-        <h2 className="text-6xl font-bold text-rose-50 drop-shadow">optional</h2>
+        <h2 className="text-7xl font-bold text-rose-50 drop-shadow text-center">GEMS</h2>
       </div>
 
       <div className="w-full h-full bg-slate-50 dark:bg-slate-950 flex items-center justify-center">

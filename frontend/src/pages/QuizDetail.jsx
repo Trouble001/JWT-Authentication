@@ -35,7 +35,7 @@ export default function QuizDetail() {
       <table className="border-collapse w-full text-left text-xs md:text-sm lg:text-base xl:text-md table-auto border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-950">
       <thead className="">
         <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-300">
-          <th className="px-2 py-1 border-r border-slate-200 dark:border-slate-700">S.N.</th>
+          <th className="px-2 py-1 border-r border-slate-200 dark:border-slate-700">#</th>
           <th className="px-2 py-1 border-r border-slate-200 dark:border-slate-700">Question</th>
           <th className="px-2 py-1 border-r border-slate-200 dark:border-slate-700">Option A</th>
           <th className="px-2 py-1 border-r border-slate-200 dark:border-slate-700">Option B</th>
